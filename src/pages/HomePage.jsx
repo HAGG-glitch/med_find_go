@@ -1,7 +1,21 @@
-import { Link } from "react-router-dom"
-import { ArrowRight, Activity, MapPin, Truck, Building2, Users, Stethoscope } from "lucide-react"
+import { Link, useNavigate } from "react-router-dom"
+import { ArrowRight, Activity, MapPin, Truck, Building2, Users, Stethoscope, Locate } from "lucide-react"
+import TypeaheadSearch from "../components/TypeaheadSearch"
+import { useHospitals } from "../hooks/useHospitals"
+import { useGeolocation } from "../hooks/useGeolocation"
 
 export default function HomePage() {
+  const navigate = useNavigate()
+  const { hospitals } = useHospitals({ pollInterval: 0 }) // No polling on homepage
+  const { location, requestLocation } = useGeolocation()
+
+  const handleLocateMe = () => {
+    requestLocation()
+    if (location) {
+      navigate("/directory?sort=nearest")
+    }
+  }
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -82,21 +96,15 @@ export default function HomePage() {
             <p className="text-muted-foreground">Search by hospital name, service, or district</p>
           </div>
 
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search hospital, service or district..."
-              className="w-full px-6 py-4 bg-card border-2 border-border rounded-2xl text-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all shadow-lg hover:shadow-xl"
-            />
-            <button className="absolute right-2 top-1/2 -translate-y-1/2 bg-primary text-primary-foreground px-6 py-3 rounded-xl font-semibold hover:bg-primary/90 transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 active:scale-95">
-              Search
-            </button>
-          </div>
+          <TypeaheadSearch hospitals={hospitals} className="mb-6" />
 
-          <div className="mt-6 flex items-center justify-center">
-            <button className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors">
-              <MapPin className="w-5 h-5" />
-              <span className="font-medium">Locate me</span>
+          <div className="flex items-center justify-center">
+            <button
+              onClick={handleLocateMe}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-accent-foreground rounded-xl font-semibold hover:bg-accent/90 transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 active:scale-95"
+            >
+              <Locate className="w-5 h-5" />
+              <span>Locate Me</span>
             </button>
           </div>
         </div>

@@ -1,44 +1,44 @@
-import { useState, useEffect } from "react"
-import { Plus, Search, Edit, Trash2, RefreshCw, Lock } from "lucide-react"
-import HospitalForm from "../components/admin/HospitalForm"
-import AvailabilityForm from "../components/admin/AvailabilityForm"
-import ReportsViewer from "../components/admin/ReportsViewer"
-import { mockHospitals } from "../data/mockHospitals"
+import { useState, useEffect } from "react";
+import { Plus, Search, Edit, Trash2, RefreshCw, Lock } from "lucide-react";
+import HospitalForm from "../components/admin/HospitalForm";
+import AvailabilityForm from "../components/admin/AvailabilityForm";
+import ReportsViewer from "../components/admin/ReportsViewer";
+import { mockHospitals } from "../data/mockHospitals";
 
 export default function AdminPanel() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [password, setPassword] = useState("")
-  const [activeTab, setActiveTab] = useState("hospitals") // hospitals, reports
-  const [hospitals, setHospitals] = useState(mockHospitals)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [editingHospital, setEditingHospital] = useState(null)
-  const [showForm, setShowForm] = useState(false)
-  const [showAvailabilityForm, setShowAvailabilityForm] = useState(false)
-  const [selectedHospital, setSelectedHospital] = useState(null)
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState("");
+  const [activeTab, setActiveTab] = useState("hospitals"); // hospitals, reports
+  const [hospitals, setHospitals] = useState(mockHospitals);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [editingHospital, setEditingHospital] = useState(null);
+  const [showForm, setShowForm] = useState(false);
+  const [showAvailabilityForm, setShowAvailabilityForm] = useState(false);
+  const [selectedHospital, setSelectedHospital] = useState(null);
 
   // Check authentication
   const handleLogin = (e) => {
-    e.preventDefault()
-    const adminSecret = import.meta.env.VITE_ADMIN_SECRET || "admin123"
+    e.preventDefault();
+    const adminSecret = import.meta.env.VITE_ADMIN_SECRET || "admin123";
     if (password === adminSecret) {
-      setIsAuthenticated(true)
-      localStorage.setItem("admin_auth", "true")
+      setIsAuthenticated(true);
+      localStorage.setItem("admin_auth", "true");
     } else {
-      alert("Incorrect password")
+      alert("Incorrect password");
     }
-  }
+  };
 
   useEffect(() => {
-    const auth = localStorage.getItem("admin_auth")
+    const auth = localStorage.getItem("admin_auth");
     if (auth === "true") {
-      setIsAuthenticated(true)
+      setIsAuthenticated(true);
     }
-  }, [])
+  }, []);
 
   const handleLogout = () => {
-    setIsAuthenticated(false)
-    localStorage.removeItem("admin_auth")
-  }
+    setIsAuthenticated(false);
+    localStorage.removeItem("admin_auth");
+  };
 
   // CRUD Operations
   const handleCreate = (hospitalData) => {
@@ -46,10 +46,10 @@ export default function AdminPanel() {
       ...hospitalData,
       id: Math.max(...hospitals.map((h) => h.id)) + 1,
       last_updated: new Date().toISOString(),
-    }
-    setHospitals([...hospitals, newHospital])
-    setShowForm(false)
-  }
+    };
+    setHospitals([...hospitals, newHospital]);
+    setShowForm(false);
+  };
 
   const handleUpdate = (hospitalData) => {
     setHospitals(
@@ -59,18 +59,18 @@ export default function AdminPanel() {
               ...hospitalData,
               last_updated: new Date().toISOString(),
             }
-          : h,
-      ),
-    )
-    setEditingHospital(null)
-    setShowForm(false)
-  }
+          : h
+      )
+    );
+    setEditingHospital(null);
+    setShowForm(false);
+  };
 
   const handleDelete = (id) => {
     if (confirm("Are you sure you want to delete this hospital?")) {
-      setHospitals(hospitals.filter((h) => h.id !== id))
+      setHospitals(hospitals.filter((h) => h.id !== id));
     }
-  }
+  };
 
   const handleUpdateAvailability = (id, availabilityData) => {
     setHospitals(
@@ -81,19 +81,19 @@ export default function AdminPanel() {
               ...availabilityData,
               last_updated: new Date().toISOString(),
             }
-          : h,
-      ),
-    )
-    setShowAvailabilityForm(false)
-    setSelectedHospital(null)
-  }
+          : h
+      )
+    );
+    setShowAvailabilityForm(false);
+    setSelectedHospital(null);
+  };
 
   // Filter hospitals by search
   const filteredHospitals = hospitals.filter(
     (h) =>
       h.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      h.district.toLowerCase().includes(searchTerm.toLowerCase()),
-  )
+      h.district.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   if (!isAuthenticated) {
     return (
@@ -102,10 +102,14 @@ export default function AdminPanel() {
           <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/10 text-primary rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-md">
             <Lock className="w-8 h-8" />
           </div>
-          <h1 className="text-2xl font-bold text-foreground text-center mb-6">Admin Panel</h1>
+          <h1 className="text-2xl font-bold text-foreground text-center mb-6">
+            Admin Panel
+          </h1>
           <form onSubmit={handleLogin} className="space-y-5">
             <div>
-              <label className="block text-sm font-medium text-foreground mb-2">Admin Password</label>
+              <label className="block text-sm font-medium text-foreground mb-2">
+                Admin Password
+              </label>
               <input
                 type="password"
                 value={password}
@@ -127,7 +131,7 @@ export default function AdminPanel() {
           </p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -136,8 +140,12 @@ export default function AdminPanel() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-foreground mb-2">Admin Panel</h1>
-            <p className="text-muted-foreground">Manage hospitals and review reports</p>
+            <h1 className="text-3xl font-bold text-foreground mb-2">
+              Admin Panel
+            </h1>
+            <p className="text-muted-foreground">
+              Manage hospitals and review reports
+            </p>
           </div>
           <button
             onClick={handleLogout}
@@ -188,8 +196,8 @@ export default function AdminPanel() {
               </div>
               <button
                 onClick={() => {
-                  setEditingHospital(null)
-                  setShowForm(true)
+                  setEditingHospital(null);
+                  setShowForm(true);
                 }}
                 className="flex items-center justify-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-xl font-semibold hover:bg-primary/90 transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 active:scale-95"
               >
@@ -204,27 +212,52 @@ export default function AdminPanel() {
                 <table className="w-full">
                   <thead className="bg-muted/50 border-b border-border">
                     <tr>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Name</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">District</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Beds</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Status</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Last Updated</th>
-                      <th className="px-6 py-4 text-right text-sm font-semibold text-foreground">Actions</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">
+                        Name
+                      </th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">
+                        District
+                      </th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">
+                        Beds
+                      </th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">
+                        Status
+                      </th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">
+                        Last Updated
+                      </th>
+                      <th className="px-6 py-4 text-right text-sm font-semibold text-foreground">
+                        Actions
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
                     {filteredHospitals.map((hospital) => (
-                      <tr key={hospital.id} className="hover:bg-muted/30 transition-colors duration-150">
+                      <tr
+                        key={hospital.id}
+                        className="hover:bg-muted/30 transition-colors duration-150"
+                      >
                         <td className="px-6 py-4">
-                          <div className="font-medium text-foreground">{hospital.name}</div>
-                          <div className="text-sm text-muted-foreground">{hospital.phone}</div>
+                          <div className="font-medium text-foreground">
+                            {hospital.name}
+                          </div>
+                          <div className="text-sm text-muted-foreground">
+                            {hospital.phone}
+                          </div>
                         </td>
-                        <td className="px-6 py-4 text-sm text-foreground">{hospital.district}</td>
-                        <td className="px-6 py-4 text-sm text-foreground">{hospital.beds_available}</td>
+                        <td className="px-6 py-4 text-sm text-foreground">
+                          {hospital.district}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-foreground">
+                          {hospital.beds_available}
+                        </td>
                         <td className="px-6 py-4">
                           <span
                             className={`px-3 py-1 rounded-full text-xs font-medium ${
-                              hospital.open_now ? "bg-accent/10 text-accent" : "bg-muted text-muted-foreground"
+                              hospital.open_now
+                                ? "bg-accent/10 text-accent"
+                                : "bg-muted text-muted-foreground"
                             }`}
                           >
                             {hospital.open_now ? "Open" : "Closed"}
@@ -237,8 +270,8 @@ export default function AdminPanel() {
                           <div className="flex items-center justify-end gap-2">
                             <button
                               onClick={() => {
-                                setSelectedHospital(hospital)
-                                setShowAvailabilityForm(true)
+                                setSelectedHospital(hospital);
+                                setShowAvailabilityForm(true);
                               }}
                               className="p-2 text-primary hover:bg-primary/10 rounded-lg transition-all duration-200 hover:scale-110 active:scale-95"
                               title="Update availability"
@@ -247,8 +280,8 @@ export default function AdminPanel() {
                             </button>
                             <button
                               onClick={() => {
-                                setEditingHospital(hospital)
-                                setShowForm(true)
+                                setEditingHospital(hospital);
+                                setShowForm(true);
                               }}
                               className="p-2 text-primary hover:bg-primary/10 rounded-lg transition-all duration-200 hover:scale-110 active:scale-95"
                               title="Edit"
@@ -283,8 +316,8 @@ export default function AdminPanel() {
           hospital={editingHospital}
           onSubmit={editingHospital ? handleUpdate : handleCreate}
           onClose={() => {
-            setShowForm(false)
-            setEditingHospital(null)
+            setShowForm(false);
+            setEditingHospital(null);
           }}
         />
       )}
@@ -293,13 +326,15 @@ export default function AdminPanel() {
       {showAvailabilityForm && selectedHospital && (
         <AvailabilityForm
           hospital={selectedHospital}
-          onSubmit={(data) => handleUpdateAvailability(selectedHospital.id, data)}
+          onSubmit={(data) =>
+            handleUpdateAvailability(selectedHospital.id, data)
+          }
           onClose={() => {
-            setShowAvailabilityForm(false)
-            setSelectedHospital(null)
+            setShowAvailabilityForm(false);
+            setSelectedHospital(null);
           }}
         />
       )}
     </div>
-  )
+  );
 }

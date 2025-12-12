@@ -14,7 +14,8 @@ import {
   Navigation,
   AlertCircle,
 } from "lucide-react"
-import { mockHospitals } from "../data/mockHospitals"
+import { useHospital } from "../hooks/useHospitals"
+import { SkeletonDetail } from "../components/SkeletonLoader"
 import ReportForm from "../components/ReportForm"
 
 export default function HospitalDetailPage() {
@@ -23,13 +24,25 @@ export default function HospitalDetailPage() {
   const [showReportForm, setShowReportForm] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
-  const hospital = mockHospitals.find((h) => h.id === Number.parseInt(id))
+  const { hospital, loading, error } = useHospital(id)
 
-  if (!hospital) {
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <SkeletonDetail />
+        </div>
+      </div>
+    )
+  }
+
+  if (error || !hospital) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-foreground mb-2">Hospital not found</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-2">
+            {error ? "Error loading hospital" : "Hospital not found"}
+          </h2>
           <Link to="/directory" className="text-primary hover:underline">
             Back to directory
           </Link>

@@ -82,9 +82,20 @@ The app expects the following API endpoints:
 
 ## Environment Variables
 
-- `VITE_MAPBOX_ACCESS_TOKEN` - Mapbox GL JS access token
-- `VITE_API_URL` - Backend API URL
-- `VITE_ADMIN_SECRET` - Admin panel authentication token
+Create a `.env` file in the root directory:
+
+```bash
+# Mapbox Access Token (Required for map features)
+VITE_MAPBOX_ACCESS_TOKEN=pk.your_token_here
+
+# Backend API URL (Optional, defaults to http://localhost:8000)
+VITE_API_URL=http://localhost:8000
+
+# Admin Secret Token (Optional, defaults to "admin123")
+VITE_ADMIN_SECRET=your_admin_secret_here
+```
+
+**Note**: This is a Vite project, so environment variables use the `VITE_` prefix (not `NEXT_PUBLIC_`).
 
 ## Tech Stack
 
