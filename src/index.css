@@ -1,0 +1,13 @@
+@import "tailwindcss";
+@import "mapbox-gl/dist/mapbox-gl.css";
+
+/* Mapbox overrides */
+.mapboxgl-popup-content {
+  padding: 0;
+  border-radius: var(--radius);
+}
+
+.mapboxgl-popup-close-button {
+  font-size: 20px;
+  padding: 8px;
+}
