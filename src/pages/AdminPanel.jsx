@@ -135,44 +135,44 @@ export default function AdminPanel() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-sky-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-foreground mb-2">
+            <h1 className="text-3xl font-bold text-deepforest mb-2">
               Admin Panel
             </h1>
-            <p className="text-muted-foreground">
+            <p className="text-deepforest/70">
               Manage hospitals and review reports
             </p>
           </div>
           <button
             onClick={handleLogout}
-            className="px-4 py-2.5 bg-muted text-foreground rounded-lg hover:bg-muted/80 transition-all duration-200 shadow-sm hover:shadow-md hover:scale-105 active:scale-95 font-medium"
+            className="px-4 py-2.5 bg-white border border-gray-200 text-deepforest rounded-lg hover:bg-sky-50 transition-all duration-200 shadow-sm hover:shadow-md hover:scale-105 active:scale-95 font-medium"
           >
             Logout
           </button>
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-2 mb-6 border-b border-border">
+        <div className="flex gap-2 mb-6 border-b border-gray-200">
           <button
             onClick={() => setActiveTab("hospitals")}
-            className={`px-6 py-3 font-medium transition-all duration-200 border-b-2 relative ${
+            className={`px-6 py-3 font-medium transition-all duration-200 border-b-2 ${
               activeTab === "hospitals"
-                ? "border-primary text-primary"
-                : "border-transparent text-muted-foreground hover:text-foreground hover:border-muted-foreground/30"
+                ? "border-amber-400 text-amber-400"
+                : "border-transparent text-deepforest/70 hover:text-deepforest hover:border-deepforest/30"
             }`}
           >
             Hospitals ({hospitals.length})
           </button>
           <button
             onClick={() => setActiveTab("reports")}
-            className={`px-6 py-3 font-medium transition-all duration-200 border-b-2 relative ${
+            className={`px-6 py-3 font-medium transition-all duration-200 border-b-2 ${
               activeTab === "reports"
-                ? "border-primary text-primary"
-                : "border-transparent text-muted-foreground hover:text-foreground hover:border-muted-foreground/30"
+                ? "border-amber-400 text-amber-400"
+                : "border-transparent text-deepforest/70 hover:text-deepforest hover:border-deepforest/30"
             }`}
           >
             Reports
@@ -185,13 +185,13 @@ export default function AdminPanel() {
             {/* Actions Bar */}
             <div className="flex flex-col md:flex-row gap-4 mb-6">
               <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-leaf pointer-events-none" />
                 <input
                   type="text"
                   placeholder="Search hospitals..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 bg-card border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all shadow-sm hover:shadow-md"
+                  className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400/30 focus:border-amber-400 transition-all shadow-sm hover:shadow-md"
                 />
               </div>
               <button
@@ -199,7 +199,7 @@ export default function AdminPanel() {
                   setEditingHospital(null);
                   setShowForm(true);
                 }}
-                className="flex items-center justify-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-xl font-semibold hover:bg-primary/90 transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 active:scale-95"
+                className="flex items-center justify-center gap-2 px-6 py-3 bg-amber-400 text-white rounded-xl font-semibold hover:bg-amber-500 transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 active:scale-95"
               >
                 <Plus className="w-5 h-5" />
                 Add Hospital
@@ -207,63 +207,63 @@ export default function AdminPanel() {
             </div>
 
             {/* Hospitals List */}
-            <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
+            <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-muted/50 border-b border-border">
+                  <thead className="bg-sky-50 border-b border-gray-200">
                     <tr>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-deepforest">
                         Name
                       </th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-deepforest">
                         District
                       </th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-deepforest">
                         Beds
                       </th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-deepforest">
                         Status
                       </th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-deepforest">
                         Last Updated
                       </th>
-                      <th className="px-6 py-4 text-right text-sm font-semibold text-foreground">
+                      <th className="px-6 py-4 text-right text-sm font-semibold text-deepforest">
                         Actions
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-border">
+                  <tbody className="divide-y divide-gray-200">
                     {filteredHospitals.map((hospital) => (
                       <tr
                         key={hospital.id}
-                        className="hover:bg-muted/30 transition-colors duration-150"
+                        className="hover:bg-sky-50 transition-colors duration-150"
                       >
                         <td className="px-6 py-4">
-                          <div className="font-medium text-foreground">
+                          <div className="font-medium text-deepforest">
                             {hospital.name}
                           </div>
-                          <div className="text-sm text-muted-foreground">
+                          <div className="text-sm text-deepforest/70">
                             {hospital.phone}
                           </div>
                         </td>
-                        <td className="px-6 py-4 text-sm text-foreground">
+                        <td className="px-6 py-4 text-sm text-deepforest">
                           {hospital.district}
                         </td>
-                        <td className="px-6 py-4 text-sm text-foreground">
+                        <td className="px-6 py-4 text-sm text-deepforest">
                           {hospital.beds_available}
                         </td>
                         <td className="px-6 py-4">
                           <span
                             className={`px-3 py-1 rounded-full text-xs font-medium ${
                               hospital.open_now
-                                ? "bg-accent/10 text-accent"
-                                : "bg-muted text-muted-foreground"
+                                ? "bg-amber-100 text-amber-400"
+                                : "bg-sky-100 text-deepforest/70"
                             }`}
                           >
                             {hospital.open_now ? "Open" : "Closed"}
                           </span>
                         </td>
-                        <td className="px-6 py-4 text-sm text-muted-foreground">
+                        <td className="px-6 py-4 text-sm text-deepforest/70">
                           {new Date(hospital.last_updated).toLocaleDateString()}
                         </td>
                         <td className="px-6 py-4">
@@ -273,7 +273,7 @@ export default function AdminPanel() {
                                 setSelectedHospital(hospital);
                                 setShowAvailabilityForm(true);
                               }}
-                              className="p-2 text-primary hover:bg-primary/10 rounded-lg transition-all duration-200 hover:scale-110 active:scale-95"
+                              className="p-2 text-amber-400 hover:bg-amber-100 rounded-lg transition-all duration-200 hover:scale-110 active:scale-95"
                               title="Update availability"
                             >
                               <RefreshCw className="w-4 h-4" />
@@ -283,7 +283,7 @@ export default function AdminPanel() {
                                 setEditingHospital(hospital);
                                 setShowForm(true);
                               }}
-                              className="p-2 text-primary hover:bg-primary/10 rounded-lg transition-all duration-200 hover:scale-110 active:scale-95"
+                              className="p-2 text-amber-400 hover:bg-amber-100 rounded-lg transition-all duration-200 hover:scale-110 active:scale-95"
                               title="Edit"
                             >
                               <Edit className="w-4 h-4" />

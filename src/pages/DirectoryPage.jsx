@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { List, MapIcon } from "lucide-react";
 import FiltersPanel from "../components/FiltersPanel";
 import HospitalList from "../components/HospitalList";
@@ -6,13 +7,21 @@ import MapboxMap from "../components/MapboxMap";
 import { SkeletonList } from "../components/SkeletonLoader";
 import { useHospitals } from "../hooks/useHospitals";
 import { useGeolocation } from "../hooks/useGeolocation";
+import { useFavorites } from "../hooks/useFavorites";
 
 export default function DirectoryPage() {
   const { hospitals, loading, error, lastSynced } = useHospitals({
     pollInterval: 30000,
   });
-  const { location: userLocation } = useGeolocation();
-  const [view, setView] = useState("list"); // "list" or "map"
+  const { location: userLocation, requestLocation } = useGeolocation();
+  const { favorites } = useFavorites();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchQuery = searchParams.get("search") || "";
+  const [view, setView] = useState(() => {
+    // Check URL params for view preference
+    const viewParam = searchParams.get("view");
+    return viewParam === "map" ? "map" : "list";
+  });
   const [filters, setFilters] = useState({
     openNow: false,
     government: null, // null, true, or false
@@ -23,9 +32,30 @@ export default function DirectoryPage() {
     minBeds: 0,
     specialists: [],
     minRating: 0,
+    favoritesOnly: false, // NEW: Filter by favorites
   });
-  const [sortBy, setSortBy] = useState("nearest"); // "nearest", "rating", "beds"
+  const [sortBy, setSortBy] = useState(() => {
+    // Check URL params for sort preference
+    const sortParam = searchParams.get("sort");
+    return sortParam || "nearest";
+  });
   const [selectedHospital, setSelectedHospital] = useState(null);
+
+  // Request location if coming from homepage "Locate Me" button
+  useEffect(() => {
+    const sortParam = searchParams.get("sort");
+    if (sortParam === "nearest" && !userLocation) {
+      requestLocation();
+    }
+  }, [searchParams, userLocation, requestLocation]);
+
+  // Handle "View on Map" button click
+  const handleViewOnMap = (hospitalId) => {
+    setSelectedHospital(hospitalId);
+    setView("map");
+    // Scroll to top to ensure map is visible
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   // Calculate distance for nearest sort
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -42,9 +72,29 @@ export default function DirectoryPage() {
     return R * c;
   };
 
-  // Filter hospitals based on current filters
+  // Filter hospitals based on current filters and search
   const filteredHospitals = useMemo(() => {
     return hospitals.filter((hospital) => {
+      // Search filter
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        const matchesSearch =
+          hospital.name.toLowerCase().includes(query) ||
+          hospital.address.toLowerCase().includes(query) ||
+          hospital.district.toLowerCase().includes(query) ||
+          hospital.services.some((service) =>
+            service.toLowerCase().includes(query)
+          ) ||
+          hospital.specialists.some((spec) =>
+            spec.toLowerCase().includes(query)
+          );
+        if (!matchesSearch) return false;
+      }
+
+      // Favorites filter
+      if (filters.favoritesOnly && !favorites.includes(hospital.id))
+        return false;
+
       if (filters.openNow && !hospital.open_now) return false;
       if (
         filters.government !== null &&
@@ -71,7 +121,7 @@ export default function DirectoryPage() {
       if (hospital.rating < filters.minRating) return false;
       return true;
     });
-  }, [hospitals, filters]);
+  }, [hospitals, filters, favorites, searchQuery]);
 
   // Sort hospitals
   const sortedHospitals = useMemo(() => {
@@ -104,15 +154,15 @@ export default function DirectoryPage() {
   }, [filteredHospitals, sortBy, userLocation]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-sky-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-foreground mb-2">
+            <h1 className="text-3xl font-bold text-deepforest mb-2">
               Hospital Directory
             </h1>
-            <p className="text-muted-foreground">
+            <p className="text-deepforest/70">
               {filteredHospitals.length} hospitals found{" "}
               {filters.district && `in ${filters.district}`}
             </p>
@@ -124,22 +174,22 @@ export default function DirectoryPage() {
               onClick={() => setView("list")}
               className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all duration-200 ${
                 view === "list"
-                  ? "bg-primary text-primary-foreground shadow-md"
-                  : "bg-card border border-border text-foreground hover:bg-muted hover:shadow-sm"
+                  ? "bg-amber-400 text-white shadow-md"
+                  : "bg-white border border-gray-200 text-deepforest hover:bg-sky-100 hover:shadow-sm"
               }`}
             >
-              <List className="w-4 h-4" />
+              <List className="w-4 h-4 text-deepforest" />
               List
             </button>
             <button
               onClick={() => setView("map")}
               className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all duration-200 ${
                 view === "map"
-                  ? "bg-primary text-primary-foreground shadow-md"
-                  : "bg-card border border-border text-foreground hover:bg-muted hover:shadow-sm"
+                  ? "bg-amber-400 text-white shadow-md"
+                  : "bg-white border border-gray-200 text-deepforest hover:bg-sky-100 hover:shadow-sm"
               }`}
             >
-              <MapIcon className="w-4 h-4" />
+              <MapIcon className="w-4 h-4 text-deepforest" />
               Map
             </button>
           </div>
@@ -154,6 +204,7 @@ export default function DirectoryPage() {
               setFilters={setFilters}
               sortBy={sortBy}
               setSortBy={setSortBy}
+              className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm"
             />
           </div>
 
@@ -162,9 +213,9 @@ export default function DirectoryPage() {
             {loading ? (
               <SkeletonList count={5} />
             ) : error ? (
-              <div className="bg-card border border-border rounded-2xl p-8 text-center">
+              <div className="bg-white border border-gray-200 rounded-2xl p-8 text-center shadow-sm">
                 <p className="text-destructive mb-4">{error}</p>
-                <p className="text-muted-foreground text-sm">
+                <p className="text-gray-500 text-sm">
                   Using cached data. Last synced:{" "}
                   {lastSynced ? new Date(lastSynced).toLocaleString() : "Never"}
                 </p>
@@ -175,10 +226,12 @@ export default function DirectoryPage() {
                   <HospitalList
                     hospitals={sortedHospitals}
                     onHospitalClick={(id) => setSelectedHospital(id)}
+                    onViewMap={handleViewOnMap}
+                    className="space-y-4"
                   />
                 )}
                 {view === "map" && (
-                  <div className="h-[calc(100vh-200px)] min-h-[500px]">
+                  <div className="h-[calc(100vh-200px)] min-h-[500px] rounded-2xl overflow-hidden border border-gray-200 shadow-sm">
                     <MapboxMap
                       hospitals={sortedHospitals}
                       onMarkerClick={(id) => setSelectedHospital(id)}

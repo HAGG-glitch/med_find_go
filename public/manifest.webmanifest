@@ -1,0 +1,23 @@
+{
+  "name": "Med-Find Salone",
+  "short_name": "Med-Find",
+  "description": "Find hospitals with beds, oxygen & ambulance near you in Sierra Leone",
+  "theme_color": "#1E88E5",
+  "background_color": "#FFFFFF",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "/icon-light-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-dark-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    }
+  ]
+}
+

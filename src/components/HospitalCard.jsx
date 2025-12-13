@@ -1,18 +1,54 @@
-import { Link } from "react-router-dom"
-import { Star, Bed, Wind, Truck, Phone, MapPin, Clock } from "lucide-react"
+import { Link } from "react-router-dom";
+import { Star, Bed, Wind, Truck, Phone, MapPin, Clock, Navigation } from "lucide-react";
+import FavoriteButton from "./FavoriteButton";
+import RealTimeIndicator from "./RealTimeIndicator";
+import { useGeolocation } from "../hooks/useGeolocation";
 
 export default function HospitalCard({ hospital, onViewMap }) {
+  const { location: userLocation } = useGeolocation();
+
+  // Calculate distance if user location is available
+  const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371; // Earth's radius in km
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLon = ((lon2 - lon1) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
+
+  const distance = userLocation
+    ? calculateDistance(
+        userLocation.latitude,
+        userLocation.longitude,
+        hospital.latitude,
+        hospital.longitude
+      )
+    : null;
+
+  const distanceFormatted = distance
+    ? distance < 1
+      ? `${(distance * 1000).toFixed(0)}m away`
+      : `${distance.toFixed(2)}km away`
+    : null;
   const getQueueColor = (status) => {
-    if (status === "light") return "text-accent bg-accent/10"
-    if (status === "medium") return "text-yellow-600 bg-yellow-100 dark:bg-yellow-900/20"
-    return "text-destructive bg-destructive/10"
-  }
+    if (status === "light") return "text-accent bg-accent/10";
+    if (status === "medium")
+      return "text-yellow-600 bg-yellow-100 dark:bg-yellow-900/20";
+    return "text-destructive bg-destructive/10";
+  };
 
   const getCapacityColor = (capacity) => {
-    if (capacity === "high") return "text-accent bg-accent/10"
-    if (capacity === "medium") return "text-yellow-600 bg-yellow-100 dark:bg-yellow-900/20"
-    return "text-destructive bg-destructive/10"
-  }
+    if (capacity === "high") return "text-accent bg-accent/10";
+    if (capacity === "medium")
+      return "text-yellow-600 bg-yellow-100 dark:bg-yellow-900/20";
+    return "text-destructive bg-destructive/10";
+  };
 
   return (
     <div className="bg-card border border-border rounded-2xl p-6 hover:shadow-xl transition-all duration-200 hover:scale-[1.02] hover:border-primary/20 group">
@@ -20,26 +56,47 @@ export default function HospitalCard({ hospital, onViewMap }) {
         <div className="flex-1">
           {/* Header */}
           <div className="flex items-start justify-between mb-3">
-            <div>
-              <Link to={`/hospital/${hospital.id}`} className="hover:text-primary transition-colors">
-                <h3 className="text-xl font-bold text-foreground mb-1">{hospital.name}</h3>
-              </Link>
+            <div className="flex-1">
+              <div className="flex items-start gap-2">
+                <Link
+                  to={`/hospital/${hospital.id}`}
+                  className="hover:text-primary transition-colors flex-1"
+                >
+                  <h3 className="text-xl font-bold text-foreground mb-1">
+                    {hospital.name}
+                  </h3>
+                </Link>
+                <FavoriteButton hospitalId={hospital.id} />
+              </div>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <MapPin className="w-4 h-4" />
                 <span>{hospital.address}</span>
+                {distanceFormatted && (
+                  <>
+                    <span>•</span>
+                    <span className="flex items-center gap-1 text-primary font-medium">
+                      <Navigation className="w-3 h-3" />
+                      {distanceFormatted}
+                    </span>
+                  </>
+                )}
               </div>
             </div>
-            {hospital.open_now && (
-              <span className="px-3 py-1 bg-accent/10 text-accent text-xs font-medium rounded-full border border-accent/20 shadow-sm">
-                Open
-              </span>
-            )}
+            <div className="flex flex-col items-end gap-2">
+              {hospital.open_now && (
+                <span className="px-3 py-1 bg-accent/10 text-accent text-xs font-medium rounded-full border border-accent/20 shadow-sm">
+                  Open
+                </span>
+              )}
+            </div>
           </div>
 
           {/* Rating */}
           <div className="flex items-center gap-1 mb-4">
             <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-            <span className="font-semibold text-foreground">{hospital.rating}</span>
+            <span className="font-semibold text-foreground">
+              {hospital.rating}
+            </span>
             <span className="text-sm text-muted-foreground ml-1">
               ({hospital.is_government ? "Government" : "Private"})
             </span>
@@ -52,7 +109,9 @@ export default function HospitalCard({ hospital, onViewMap }) {
                 <Bed className="w-4 h-4 text-primary" />
               </div>
               <div>
-                <div className="text-sm font-semibold text-foreground">{hospital.beds_available}</div>
+                <div className="text-sm font-semibold text-foreground">
+                  {hospital.beds_available}
+                </div>
                 <div className="text-xs text-muted-foreground">Beds</div>
               </div>
             </div>
@@ -63,10 +122,16 @@ export default function HospitalCard({ hospital, onViewMap }) {
                   hospital.oxygen ? "bg-accent/10" : "bg-muted"
                 }`}
               >
-                <Wind className={`w-4 h-4 ${hospital.oxygen ? "text-accent" : "text-muted-foreground"}`} />
+                <Wind
+                  className={`w-4 h-4 ${
+                    hospital.oxygen ? "text-accent" : "text-muted-foreground"
+                  }`}
+                />
               </div>
               <div>
-                <div className="text-sm font-semibold text-foreground">{hospital.oxygen ? "Yes" : "No"}</div>
+                <div className="text-sm font-semibold text-foreground">
+                  {hospital.oxygen ? "Yes" : "No"}
+                </div>
                 <div className="text-xs text-muted-foreground">Oxygen</div>
               </div>
             </div>
@@ -77,10 +142,16 @@ export default function HospitalCard({ hospital, onViewMap }) {
                   hospital.ambulance ? "bg-accent/10" : "bg-muted"
                 }`}
               >
-                <Truck className={`w-4 h-4 ${hospital.ambulance ? "text-accent" : "text-muted-foreground"}`} />
+                <Truck
+                  className={`w-4 h-4 ${
+                    hospital.ambulance ? "text-accent" : "text-muted-foreground"
+                  }`}
+                />
               </div>
               <div>
-                <div className="text-sm font-semibold text-foreground">{hospital.ambulance ? "Yes" : "No"}</div>
+                <div className="text-sm font-semibold text-foreground">
+                  {hospital.ambulance ? "Yes" : "No"}
+                </div>
                 <div className="text-xs text-muted-foreground">Ambulance</div>
               </div>
             </div>
@@ -108,14 +179,20 @@ export default function HospitalCard({ hospital, onViewMap }) {
             <div className="flex items-center gap-2">
               <Clock className="w-4 h-4 text-muted-foreground" />
               <span className="text-muted-foreground">Queue:</span>
-              <span className={`px-2 py-1 rounded-md text-xs font-medium ${getQueueColor(hospital.queue_status)}`}>
+              <span
+                className={`px-2 py-1 rounded-md text-xs font-medium ${getQueueColor(
+                  hospital.queue_status
+                )}`}
+              >
                 {hospital.queue_status}
               </span>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-muted-foreground">Emergency:</span>
               <span
-                className={`px-2 py-1 rounded-md text-xs font-medium ${getCapacityColor(hospital.emergency_capacity)}`}
+                className={`px-2 py-1 rounded-md text-xs font-medium ${getCapacityColor(
+                  hospital.emergency_capacity
+                )}`}
               >
                 {hospital.emergency_capacity}
               </span>
@@ -150,9 +227,12 @@ export default function HospitalCard({ hospital, onViewMap }) {
       </div>
 
       {/* Last Updated */}
-      <div className="mt-4 pt-4 border-t border-border/50 text-xs text-muted-foreground">
-        Last updated: {new Date(hospital.last_updated).toLocaleString()}
+      <div className="mt-4 pt-4 border-t border-border/50 flex items-center justify-between text-xs">
+        <div className="text-muted-foreground">
+          Updated: {new Date(hospital.last_updated).toLocaleString()}
+        </div>
+        <RealTimeIndicator lastUpdated={hospital.last_updated} />
       </div>
     </div>
-  )
+  );
 }

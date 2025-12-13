@@ -1,7 +1,9 @@
 import { useState } from "react"
-import { Phone, X, AlertCircle } from "lucide-react"
+import { Phone, X, AlertCircle, AlertTriangle } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 
 export default function FloatingEmergencyButton() {
+  const navigate = useNavigate()
   const [expanded, setExpanded] = useState(false)
 
   return (
@@ -28,6 +30,16 @@ export default function FloatingEmergencyButton() {
               <Phone className="w-5 h-5" />
               <span>Emergency Hotline</span>
             </a>
+            <button
+              onClick={() => {
+                setExpanded(false)
+                navigate("/emergency")
+              }}
+              className="flex items-center justify-center gap-2 px-4 py-3 bg-white text-destructive rounded-lg hover:bg-white/90 transition-all duration-200 w-full shadow-md hover:shadow-lg hover:scale-105 active:scale-95 font-semibold border-2 border-destructive"
+            >
+              <AlertTriangle className="w-5 h-5" />
+              <span>Emergency Mode</span>
+            </button>
             <p className="text-xs text-muted-foreground text-center font-medium">Available 24/7</p>
           </div>
         </div>

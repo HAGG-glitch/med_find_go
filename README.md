@@ -34,7 +34,7 @@ A clean, modern, offline-capable Sierra Leone medical directory showing hospital
    - Go to [Access Tokens](https://account.mapbox.com/access-tokens/)
    - Copy your default public token
    - Create a `.env` file in the root directory:
-     \`\`\`bash
+   \`\`\`bash
 
    # Create .env file
 

@@ -1,7 +1,9 @@
 import { useState } from "react"
-import { ChevronDown, ChevronUp, SlidersHorizontal } from "lucide-react"
+import { ChevronDown, ChevronUp, SlidersHorizontal, Heart } from "lucide-react"
+import { useFavorites } from "../hooks/useFavorites"
 
 export default function FiltersPanel({ filters, setFilters, sortBy, setSortBy }) {
+  const { favorites } = useFavorites()
   const [isOpen, setIsOpen] = useState(false)
 
   const districts = [
@@ -77,6 +79,22 @@ export default function FiltersPanel({ filters, setFilters, sortBy, setSortBy })
               <option value="beds">Most Beds Available</option>
             </select>
           </div>
+
+          {/* Favorites Only */}
+          {favorites.length > 0 && (
+            <label className="flex items-center gap-2 mb-4 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={filters.favoritesOnly}
+                onChange={(e) => setFilters({ ...filters, favoritesOnly: e.target.checked })}
+                className="w-4 h-4 text-primary border-border rounded focus:ring-primary"
+              />
+              <span className="text-sm text-foreground flex items-center gap-1">
+                <Heart className="w-4 h-4 text-destructive fill-current" />
+                Favorites Only ({favorites.length})
+              </span>
+            </label>
+          )}
 
           {/* Open Now */}
           <label className="flex items-center gap-2 mb-4 cursor-pointer">
@@ -248,6 +266,7 @@ export default function FiltersPanel({ filters, setFilters, sortBy, setSortBy })
                 minBeds: 0,
                 specialists: [],
                 minRating: 0,
+                favoritesOnly: false,
               })
             }
             className="w-full px-4 py-2.5 bg-muted text-foreground rounded-lg hover:bg-muted/80 transition-all duration-200 text-sm font-medium shadow-sm hover:shadow-md hover:scale-105 active:scale-95"

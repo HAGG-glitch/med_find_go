@@ -1,6 +1,6 @@
 import HospitalCard from "./HospitalCard"
 
-export default function HospitalList({ hospitals, onHospitalClick }) {
+export default function HospitalList({ hospitals, onHospitalClick, onViewMap }) {
   if (hospitals.length === 0) {
     return (
       <div className="bg-card border border-border rounded-2xl p-12 text-center">
@@ -13,7 +13,11 @@ export default function HospitalList({ hospitals, onHospitalClick }) {
   return (
     <div className="space-y-4">
       {hospitals.map((hospital) => (
-        <HospitalCard key={hospital.id} hospital={hospital} onViewMap={() => onHospitalClick?.(hospital.id)} />
+        <HospitalCard
+          key={hospital.id}
+          hospital={hospital}
+          onViewMap={onViewMap ? () => onViewMap(hospital.id) : undefined}
+        />
       ))}
     </div>
   )
