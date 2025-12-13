@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { List, MapIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import FiltersPanel from "../components/FiltersPanel";
 import HospitalList from "../components/HospitalList";
 import MapboxMap from "../components/MapboxMap";
@@ -10,6 +11,7 @@ import { useGeolocation } from "../hooks/useGeolocation";
 import { useFavorites } from "../hooks/useFavorites";
 
 export default function DirectoryPage() {
+  const { t } = useTranslation();
   const { hospitals, loading, error, lastSynced } = useHospitals({
     pollInterval: 30000,
   });
@@ -154,13 +156,13 @@ export default function DirectoryPage() {
   }, [filteredHospitals, sortBy, userLocation]);
 
   return (
-    <div className="min-h-screen bg-sky-50">
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0F172A] text-[#111827] dark:text-[#E0F2FE]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-deepforest mb-2">
-              Hospital Directory
+            <h1 className="text-3xl font-bold text-deepforest dark:text-green-400 mb-2">
+              {t("hospital_directory")}
             </h1>
             <p className="text-deepforest/70">
               {filteredHospitals.length} hospitals found{" "}
@@ -175,7 +177,7 @@ export default function DirectoryPage() {
               className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all duration-200 ${
                 view === "list"
                   ? "bg-amber-400 text-white shadow-md"
-                  : "bg-white border border-gray-200 text-deepforest hover:bg-sky-100 hover:shadow-sm"
+                  : "bg-white dark:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#334155] text-[#111827] dark:text-[#E0F2FE] hover:bg-sky-100 dark:hover:bg-[#334155] hover:shadow-sm"
               }`}
             >
               <List className="w-4 h-4 text-deepforest" />
@@ -186,7 +188,7 @@ export default function DirectoryPage() {
               className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all duration-200 ${
                 view === "map"
                   ? "bg-amber-400 text-white shadow-md"
-                  : "bg-white border border-gray-200 text-deepforest hover:bg-sky-100 hover:shadow-sm"
+                  : "bg-white dark:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#334155] text-[#111827] dark:text-[#E0F2FE] hover:bg-sky-100 dark:hover:bg-[#334155] hover:shadow-sm"
               }`}
             >
               <MapIcon className="w-4 h-4 text-deepforest" />
@@ -204,7 +206,7 @@ export default function DirectoryPage() {
               setFilters={setFilters}
               sortBy={sortBy}
               setSortBy={setSortBy}
-              className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm"
+              className="bg-white dark:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#334155] rounded-2xl p-4 shadow-sm"
             />
           </div>
 
@@ -213,7 +215,7 @@ export default function DirectoryPage() {
             {loading ? (
               <SkeletonList count={5} />
             ) : error ? (
-              <div className="bg-white border border-gray-200 rounded-2xl p-8 text-center shadow-sm">
+              <div className="bg-white dark:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#334155] rounded-2xl p-8 text-center shadow-sm">
                 <p className="text-destructive mb-4">{error}</p>
                 <p className="text-gray-500 text-sm">
                   Using cached data. Last synced:{" "}
@@ -231,7 +233,7 @@ export default function DirectoryPage() {
                   />
                 )}
                 {view === "map" && (
-                  <div className="h-[calc(100vh-200px)] min-h-[500px] rounded-2xl overflow-hidden border border-gray-200 shadow-sm">
+                  <div className="h-[calc(100vh-200px)] min-h-[500px] rounded-2xl overflow-hidden border border-[#E2E8F0] dark:border-[#334155] shadow-sm">
                     <MapboxMap
                       hospitals={sortedHospitals}
                       onMarkerClick={(id) => setSelectedHospital(id)}

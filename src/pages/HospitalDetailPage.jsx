@@ -14,6 +14,7 @@ import {
   Navigation,
   AlertCircle,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useHospital } from "../hooks/useHospitals";
 import { SkeletonDetail } from "../components/SkeletonLoader";
 import ReportForm from "../components/ReportForm";
@@ -21,6 +22,7 @@ import FavoriteButton from "../components/FavoriteButton";
 import RealTimeIndicator from "../components/RealTimeIndicator";
 
 export default function HospitalDetailPage() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
   const [showReportForm, setShowReportForm] = useState(false);
@@ -43,10 +45,10 @@ export default function HospitalDetailPage() {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-foreground mb-2">
-            {error ? "Error loading hospital" : "Hospital not found"}
+            {error ? t("error_loading_hospital") : t("hospital_not_found")}
           </h2>
           <Link to="/directory" className="text-primary hover:underline">
-            Back to directory
+            {t("back_to_directory")}
           </Link>
         </div>
       </div>
@@ -89,7 +91,7 @@ export default function HospitalDetailPage() {
         ];
 
   return (
-    <div className="min-h-screen bg-sky-50">
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0F172A] text-[#111827] dark:text-[#E0F2FE]">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Back Button */}
         <button
@@ -97,7 +99,7 @@ export default function HospitalDetailPage() {
           className="flex items-center gap-2 text-deepforest/70 hover:text-deepforest mb-6 transition-all duration-200 hover:gap-3 group"
         >
           <ChevronLeft className="w-5 h-5 group-hover:translate-x-[-2px] transition-transform text-deepforest" />
-          <span className="font-medium">Back</span>
+          <span className="font-medium">{t("back")}</span>
         </button>
 
         {/* Header Section */}
@@ -182,7 +184,7 @@ export default function HospitalDetailPage() {
         </div>
 
         {/* Availability Section */}
-        <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-6 shadow-sm">
+        <div className="bg-white dark:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#334155] rounded-2xl p-6 mb-6 shadow-sm">
           <h2 className="text-xl font-bold text-deepforest mb-6">
             Current Availability
           </h2>
@@ -247,7 +249,7 @@ export default function HospitalDetailPage() {
         {/* Services & Specialists */}
         <div className="grid md:grid-cols-2 gap-6 mb-6">
           {/* Services */}
-          <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+          <div className="bg-white dark:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#334155] rounded-2xl p-6 shadow-sm">
             <h2 className="text-xl font-bold text-deepforest mb-5">Services</h2>
             <div className="flex flex-wrap gap-2">
               {hospital.services.map((service) => (
@@ -262,7 +264,7 @@ export default function HospitalDetailPage() {
           </div>
 
           {/* Specialists */}
-          <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+          <div className="bg-white dark:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#334155] rounded-2xl p-6 shadow-sm">
             <h2 className="text-xl font-bold text-deepforest mb-5 flex items-center gap-2">
               <Users className="w-5 h-5 text-leaf" />
               Specialists
@@ -282,7 +284,7 @@ export default function HospitalDetailPage() {
         </div>
 
         {/* Contact & Visiting Hours */}
-        <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-6 shadow-sm">
+        <div className="bg-white dark:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#334155] rounded-2xl p-6 mb-6 shadow-sm">
           <h2 className="text-xl font-bold text-deepforest mb-5">
             Contact & Visiting Hours
           </h2>

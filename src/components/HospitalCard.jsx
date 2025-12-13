@@ -37,14 +37,14 @@ export default function HospitalCard({ hospital, onViewMap }) {
       : `${distance.toFixed(2)}km away`
     : null;
   const getQueueColor = (status) => {
-    if (status === "light") return "text-accent bg-accent/10";
+    if (status === "light") return "text-green bg-accent/10";
     if (status === "medium")
       return "text-yellow-600 bg-yellow-100 dark:bg-yellow-900/20";
     return "text-destructive bg-destructive/10";
   };
 
   const getCapacityColor = (capacity) => {
-    if (capacity === "high") return "text-accent bg-accent/10";
+    if (capacity === "high") return "text-red bg-accent/10";
     if (capacity === "medium")
       return "text-yellow-600 bg-yellow-100 dark:bg-yellow-900/20";
     return "text-destructive bg-destructive/10";

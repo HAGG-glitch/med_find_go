@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { Plus, Search, Edit, Trash2, RefreshCw, Lock } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import HospitalForm from "../components/admin/HospitalForm";
 import AvailabilityForm from "../components/admin/AvailabilityForm";
 import ReportsViewer from "../components/admin/ReportsViewer";
 import { mockHospitals } from "../data/mockHospitals";
 
 export default function AdminPanel() {
+  const { t } = useTranslation();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
   const [activeTab, setActiveTab] = useState("hospitals"); // hospitals, reports
@@ -103,19 +105,19 @@ export default function AdminPanel() {
             <Lock className="w-8 h-8" />
           </div>
           <h1 className="text-2xl font-bold text-foreground text-center mb-6">
-            Admin Panel
+            {t("admin_panel")}
           </h1>
           <form onSubmit={handleLogin} className="space-y-5">
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
-                Admin Password
+                {t("password")}
               </label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter admin password"
-                className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all shadow-sm hover:shadow-md"
+                placeholder={t("enter_admin_password")}
+                className="w-full px-4 py-3 bg-white dark:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#334155] rounded-xl text-[#111827] dark:text-[#E0F2FE] placeholder-gray-500 dark:placeholder-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-amber-300 dark:focus:ring-amber-400 focus:border-amber-500 transition-all shadow-sm hover:shadow-md"
                 required
               />
             </div>
@@ -123,7 +125,7 @@ export default function AdminPanel() {
               type="submit"
               className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-xl font-semibold hover:bg-primary/90 transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 active:scale-95"
             >
-              Login
+              {t("login")}
             </button>
           </form>
           <p className="text-xs text-muted-foreground text-center mt-4">
@@ -135,13 +137,13 @@ export default function AdminPanel() {
   }
 
   return (
-    <div className="min-h-screen bg-sky-50">
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0F172A] text-[#111827] dark:text-[#E0F2FE]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
           <div>
             <h1 className="text-3xl font-bold text-deepforest mb-2">
-              Admin Panel
+              {t("admin_panel")}
             </h1>
             <p className="text-deepforest/70">
               Manage hospitals and review reports
@@ -149,14 +151,14 @@ export default function AdminPanel() {
           </div>
           <button
             onClick={handleLogout}
-            className="px-4 py-2.5 bg-white border border-gray-200 text-deepforest rounded-lg hover:bg-sky-50 transition-all duration-200 shadow-sm hover:shadow-md hover:scale-105 active:scale-95 font-medium"
+            className="px-4 py-2.5 bg-white dark:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#334155] text-[#111827] dark:text-[#E0F2FE] rounded-lg hover:bg-sky-50 dark:hover:bg-[#334155] transition-all duration-200 shadow-sm hover:shadow-md hover:scale-105 active:scale-95 font-medium"
           >
-            Logout
+            {t("logout")}
           </button>
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-2 mb-6 border-b border-gray-200">
+        <div className="flex gap-2 mb-6 border-b border-[#E2E8F0] dark:border-[#334155]">
           <button
             onClick={() => setActiveTab("hospitals")}
             className={`px-6 py-3 font-medium transition-all duration-200 border-b-2 ${
@@ -165,7 +167,7 @@ export default function AdminPanel() {
                 : "border-transparent text-deepforest/70 hover:text-deepforest hover:border-deepforest/30"
             }`}
           >
-            Hospitals ({hospitals.length})
+            {t("hospitals")} ({hospitals.length})
           </button>
           <button
             onClick={() => setActiveTab("reports")}
@@ -175,7 +177,7 @@ export default function AdminPanel() {
                 : "border-transparent text-deepforest/70 hover:text-deepforest hover:border-deepforest/30"
             }`}
           >
-            Reports
+            {t("reports")}
           </button>
         </div>
 
@@ -188,10 +190,10 @@ export default function AdminPanel() {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-leaf pointer-events-none" />
                 <input
                   type="text"
-                  placeholder="Search hospitals..."
+                  placeholder={t("search_hospitals")}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400/30 focus:border-amber-400 transition-all shadow-sm hover:shadow-md"
+                  className="w-full pl-10 pr-4 py-3 bg-white dark:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#334155] rounded-xl text-[#111827] dark:text-[#E0F2FE] placeholder-gray-500 dark:placeholder-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-amber-300 dark:focus:ring-amber-400 focus:border-amber-500 transition-all shadow-sm hover:shadow-md"
                 />
               </div>
               <button
@@ -202,15 +204,15 @@ export default function AdminPanel() {
                 className="flex items-center justify-center gap-2 px-6 py-3 bg-amber-400 text-white rounded-xl font-semibold hover:bg-amber-500 transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 active:scale-95"
               >
                 <Plus className="w-5 h-5" />
-                Add Hospital
+                {t("add_hospital")}
               </button>
             </div>
 
             {/* Hospitals List */}
-            <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+            <div className="bg-white dark:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#334155] rounded-2xl overflow-hidden shadow-sm">
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-sky-50 border-b border-gray-200">
+                  <thead className="bg-sky-50 dark:bg-[#334155] border-b border-[#E2E8F0] dark:border-[#334155]">
                     <tr>
                       <th className="px-6 py-4 text-left text-sm font-semibold text-deepforest">
                         Name
@@ -274,7 +276,7 @@ export default function AdminPanel() {
                                 setShowAvailabilityForm(true);
                               }}
                               className="p-2 text-amber-400 hover:bg-amber-100 rounded-lg transition-all duration-200 hover:scale-110 active:scale-95"
-                              title="Update availability"
+                              title={t("update_availability")}
                             >
                               <RefreshCw className="w-4 h-4" />
                             </button>
@@ -284,14 +286,14 @@ export default function AdminPanel() {
                                 setShowForm(true);
                               }}
                               className="p-2 text-amber-400 hover:bg-amber-100 rounded-lg transition-all duration-200 hover:scale-110 active:scale-95"
-                              title="Edit"
+                              title={t("edit")}
                             >
                               <Edit className="w-4 h-4" />
                             </button>
                             <button
                               onClick={() => handleDelete(hospital.id)}
                               className="p-2 text-destructive hover:bg-destructive/10 rounded-lg transition-all duration-200 hover:scale-110 active:scale-95"
-                              title="Delete"
+                              title={t("delete")}
                             >
                               <Trash2 className="w-4 h-4" />
                             </button>
